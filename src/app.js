@@ -9,7 +9,11 @@ import { adminCheck } from "./utils/admin.js";
 dotenv.config();
 
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  origin: [
+    "http://localhost:5173",
+    "https://kindness-server-production.up.railway.app",
+    "https://bright-fox-a96ea8.netlify.app/",
+  ],
   credentials: true,
 };
 
