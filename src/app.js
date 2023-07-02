@@ -3,14 +3,21 @@ const logger = require("morgan");
 const dotenv = require("dotenv");
 const responseTime = require("response-time");
 const apiRouter = require("./routes/index");
+const cors = require("cors");
 
 dotenv.config();
+
+const corsOptions = {
+  origin: ["http://localhost:5173"],
+  credentials: true,
+};
 
 const port = process.env.PORT;
 const app = express();
 
 app.use(responseTime());
 app.use(express.json());
+app.use(cors(corsOptions));
 
 logger.token("emoji", function (req, res) {
   const speed = parseFloat(res.getHeader("X-Response-Time"));
