@@ -1,8 +1,12 @@
-const { body, validationResult } = require("express-validator");
-const { DateTime } = require("luxon");
-const { Pool } = require("pg");
-const dotenv = require("dotenv");
+import { body, validationResult } from "express-validator";
+import { DateTime } from "luxon";
+import pkg from "pg";
+import dotenv from "dotenv";
+import { createAvatar } from "@dicebear/core";
+import { micah } from "@dicebear/collection";
+import swearjar from "swearjar";
 
+const { Pool } = pkg;
 dotenv.config();
 
 const pool = new Pool({
@@ -13,17 +17,28 @@ const pool = new Pool({
   port: 5432,
 });
 
-exports.posts_get = async (req, res, next) => {
+export const posts_get = async (req, res, next) => {
+  if (req.admin) {
+    console.log("Admin Connected");
+  }
   try {
     const result = await pool.query(
       "SELECT * FROM posts ORDER BY post_time DESC"
     );
-    const formattedPosts = result.rows.map((post) => ({
-      ...post,
-      formatted_timestamp: DateTime.fromJSDate(post.post_time).toLocaleString(
-        DateTime.DATETIME_SHORT
-      ),
-    }));
+    const formattedPosts = result.rows.map((post) => {
+      let avatar = createAvatar(micah, {
+        size: 128,
+        seed: post.username,
+      }).toDataUriSync();
+      return {
+        ...post,
+        filtered_message: swearjar.censor(post.message),
+        formatted_timestamp: DateTime.fromJSDate(post.post_time).toLocaleString(
+          DateTime.DATETIME_SHORT
+        ),
+        avatar: avatar,
+      };
+    });
     res.json(formattedPosts);
   } catch (err) {
     console.log(err);
@@ -31,23 +46,34 @@ exports.posts_get = async (req, res, next) => {
   }
 };
 
-exports.post_message = [
+export const post_message = [
   body("username")
+    .custom((value) => {
+      if (swearjar.profane(value)) {
+        throw new Error("Username cannot contain profanity");
+      }
+      return true;
+    })
     .trim()
-    .isLength({ min: 1 })
+    .isLength({ min: 1, max: 500 })
     .escape()
-    .withMessage("Username must be specified."),
+    .withMessage("Username must be specified, and less than 500 characters."),
   body("message")
+    .custom((value) => {
+      if (swearjar.profane(value)) {
+        throw new Error("Message cannot contain profanity");
+      }
+      return true;
+    })
     .trim()
-    .isLength({ min: 1 })
+    .isLength({ min: 1, max: 500 })
     .escape()
-    .withMessage("Message must be specified."),
+    .withMessage("Message must be specified, and less than 500 characters."),
 
   async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      console.log(errors);
       return res.status(400).json({ errors: errors.array() });
     } else {
       try {
@@ -64,12 +90,17 @@ exports.post_message = [
   },
 ];
 
-exports.post_delete = async (req, res, next) => {
-  try {
-    await pool.query("DELETE FROM posts WHERE id = $1", [req.params.id]);
-    res.status(200).send("Post deleted successfully.");
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("There was an error deleting your post.");
+export const post_delete = async (req, res, next) => {
+  if (req.admin) {
+    try {
+      await pool.query("DELETE FROM posts WHERE id = $1", [req.params.id]);
+      res.status(200).send("Post deleted successfully.");
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("There was an error deleting your post.");
+    }
+  } else {
+    console.log("Attempted Deletion");
+    res.status(403).send("Forbidden");
   }
 };

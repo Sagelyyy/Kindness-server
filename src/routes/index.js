@@ -1,6 +1,7 @@
-const express = require("express");
+import express from "express";
+import * as postController from "../controllers/postController.js";
+
 const router = express.Router();
-const postController = require("../controllers/postController");
 
 router.get("/", (req, res, next) => {
   res.json({
@@ -13,4 +14,4 @@ router.get("/posts", postController.posts_get);
 router.post("/posts", postController.post_message);
 router.delete("/posts/:id", postController.post_delete);
 
-module.exports = router;
+export { router };

@@ -1,9 +1,10 @@
-const express = require("express");
-const logger = require("morgan");
-const dotenv = require("dotenv");
-const responseTime = require("response-time");
-const apiRouter = require("./routes/index");
-const cors = require("cors");
+import express from "express";
+import logger from "morgan";
+import dotenv from "dotenv";
+import responseTime from "response-time";
+import { router as apiRouter } from "./routes/index.js";
+import cors from "cors";
+import { adminCheck } from "./utils/admin.js";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ const corsOptions = {
 const port = process.env.PORT;
 const app = express();
 
+app.use(adminCheck);
 app.use(responseTime());
 app.use(express.json());
 app.use(cors(corsOptions));
