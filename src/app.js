@@ -11,8 +11,8 @@ dotenv.config();
 const corsOptions = {
   origin: [
     "http://localhost:5173",
-    "https://kindness-server-production.up.railway.app",
-    "https://bright-fox-a96ea8.netlify.app/",
+    "https://kindness-server-production.up.railway.app/",
+    "https://main--gorgeous-kulfi-f739be.netlify.app/",
   ],
   credentials: true,
 };
