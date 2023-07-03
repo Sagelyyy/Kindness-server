@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import pkg from "pg";
 import dotenv from "dotenv";
 import { createAvatar } from "@dicebear/core";
-import { micah } from "@dicebear/collection";
+import { personas } from "@dicebear/collection";
 import swearjar from "swearjar";
 
 const { Pool } = pkg;
@@ -26,7 +26,7 @@ export const posts_get = async (req, res, next) => {
       "SELECT * FROM posts ORDER BY post_time DESC"
     );
     const formattedPosts = result.rows.map((post) => {
-      let avatar = createAvatar(micah, {
+      let avatar = createAvatar(personas, {
         size: 128,
         seed: post.username,
       }).toDataUriSync();
