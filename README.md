@@ -14,8 +14,6 @@ Kindness is a full-stack web application built as a personal project to enhance 
 
 ## Technology Stack
 
-## Technology Stack
-
 - **Frontend:** The application is built with [SvelteKit](https://kit.svelte.dev), a powerful front-end framework for building user interfaces. SvelteKit allows us to write highly efficient, imperative code that directly manipulates the DOM, while still providing the high-level abstraction that we'd expect from a client-side JavaScript framework.
 
 - **Backend:** Our server side is built with [Node.js](https://nodejs.org), a JavaScript runtime built on Chrome's V8 JavaScript engine. The architecture follows a RESTful design pattern and utilizes the [Express](https://expressjs.com) framework to handle HTTP requests and routes.
