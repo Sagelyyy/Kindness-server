@@ -97,10 +97,12 @@ export const post_delete = async (req, res, next) => {
       res.status(200).send("Post deleted successfully.");
     } catch (err) {
       console.log(err);
-      res.status(500).send("There was an error deleting your post.");
+      res
+        .status(500)
+        .json({ errors: { msg: "Error attempting to delete post" } });
     }
   } else {
     console.log("Attempted Deletion");
-    res.status(403).send("Forbidden");
+    res.status(403).json({ errors: { msg: "Forbidden" } });
   }
 };
