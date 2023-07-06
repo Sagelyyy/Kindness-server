@@ -1,7 +1,4 @@
 {
-  "engines": {
-    "node": ">=14 <15"
-  },
   "type": "module",
   "dependencies": {
     "@dicebear/collection": "^6.0.4",
