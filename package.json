@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "20.0.0"
+  },
   "type": "module",
   "dependencies": {
     "@dicebear/collection": "^6.0.4",
@@ -24,5 +27,7 @@
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "Check out the [Live Preview](https://do-good.netlify.app) and the [Frontend Repository](https://github.com/Sagelyyy/Kindness-frontend)!",
+  "devDependencies": {},
+  "keywords": []
 }
