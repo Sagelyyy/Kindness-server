@@ -17,6 +17,7 @@ const corsOptions = {
   credentials: true,
 };
 const app = express();
+app.set("trust proxy", true);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(adminCheck);
