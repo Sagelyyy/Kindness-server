@@ -10,20 +10,19 @@ dotenv.config();
 
 const corsOptions = {
   origin: [
-    "http://localhost:5173",
+    "http://localhost:5174",
     // front-end
     "https://do-good.netlify.app",
   ],
   credentials: true,
 };
-
-const port = process.env.PORT;
 const app = express();
-
+app.use(cors(corsOptions));
+app.use(express.json());
 app.use(adminCheck);
 app.use(responseTime());
-app.use(express.json());
-app.use(cors(corsOptions));
+
+const port = process.env.PORT;
 
 logger.token("emoji", function (req, res) {
   const speed = parseFloat(res.getHeader("X-Response-Time"));
@@ -36,10 +35,20 @@ logger.token("emoji", function (req, res) {
   }
 });
 
-app.use(logger(":method :url :status :response-time ms :emoji"));
+logger.token("origin", function (req, res) {
+  return req.headers.origin;
+});
+
+logger.token("ip", function (req, res) {
+  return req.ip;
+});
+
+app.use(
+  logger(":method :url :status :response-time ms :emoji - :origin - :ip")
+);
 
 app.use("/api", apiRouter);
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server is Live!`);
 });
