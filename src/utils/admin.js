@@ -4,7 +4,6 @@ dotenv.config();
 export const adminCheck = (req, res, next) => {
   const adminIps = [process.env.ADMINIP, process.env.DEVIP];
   const userIp = (req.headers["x-forwarded-for"] || "").split(",").shift();
-  console.log(adminIps, userIp);
 
   if (adminIps.includes(userIp)) {
     req.admin = true;
